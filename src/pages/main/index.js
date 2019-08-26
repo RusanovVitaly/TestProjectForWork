@@ -3,19 +3,11 @@ import {Form,Button, Row, Col, AutoComplete} from 'antd';
 import Fade from 'react-reveal/Fade';
 import axios from 'axios';
 import { NavLink } from 'react-router-dom'
+import * as config from "../../configurations";
 
-const searchUrl = "http://ws.audioscrobbler.com";
-
-const apiKey = "372334a4d65c65cc8137d922f890ceeb";
-
-
-const requestHeaders = {
-    "Accept": "application/json",
-    "Access-Control-Allow-Origin": "*",
-    "X-Requested-With": "XMLHttpRequest",
-    "Access-Control-Allow-Methods" : "GET,POST,PUT,DELETE,OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"
-};
+const searchUrl = config.serverUrl;
+const apiKey = config.apiKey;
+const requestHeaders = config.requestHeaders;
 
 class Main extends React.Component {
 

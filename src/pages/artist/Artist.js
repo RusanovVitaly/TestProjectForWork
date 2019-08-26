@@ -4,20 +4,13 @@ import { Row, Col, Icon} from 'antd';
 import {NavLink} from "react-router-dom";
 import ReactHtmlParser from 'react-html-parser';
 import { Tabs } from 'antd';
-
+import * as config from "../../configurations";
 const { TabPane } = Tabs;
 
+const getArtistUrl = config.serverUrl;
+const apiKey = config.apiKey;
+const requestHeaders = config.requestHeaders;
 
-const getArtistUrl = "http://ws.audioscrobbler.com";
-const apiKey = "372334a4d65c65cc8137d922f890ceeb";
-
-const requestHeaders = {
-    "Accept": "application/json",
-    "Access-Control-Allow-Origin": "*",
-    "X-Requested-With": "XMLHttpRequest",
-    "Access-Control-Allow-Methods" : "GET,POST,PUT,DELETE,OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"
-};
 class Artist extends React.Component{
     state = {
         artist:window.location.href.split('/').pop(),
@@ -98,7 +91,6 @@ class Artist extends React.Component{
                                         })
                                     }
                                 </div>
-
                             </div>
                             <Row gutter={6}>
                                 {this.state.albums.map((res, key) => {
