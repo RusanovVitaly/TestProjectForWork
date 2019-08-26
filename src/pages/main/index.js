@@ -6,30 +6,52 @@ import { NavLink } from 'react-router-dom'
 
 const searchUrl = "http://ws.audioscrobbler.com";
 
-
 const apiKey = "372334a4d65c65cc8137d922f890ceeb";
 
-class Main extends React.Component {
 
+const requestHeaders = {
+    "Accept": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "X-Requested-With": "XMLHttpRequest",
+    "Access-Control-Allow-Methods" : "GET,POST,PUT,DELETE,OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"
+};
+
+class Main extends React.Component {
 
     state = {
         search: "",
         artists: [],
         dataSource: []
     };
+    componentDidMount() {
+        this.loadLastSearch();
+    }
 
+    loadLastSearch(){
+        if(localStorage.searchedItem !== undefined){
+            axios.post( `${searchUrl}/2.0/?method=artist.search&artist=${localStorage.searchedItem}&api_key=${apiKey}&format=json`, {}, {
+                headers: {
+                    requestHeaders
+                }
+            })
+                .then(response => {
+                    this.setState({artists: response.data.results.artistmatches.artist});
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+    }
     getArtists(values){
         axios.post( `${searchUrl}/2.0/?method=artist.search&artist=${values.search_field}&api_key=${apiKey}&format=json`, {}, {
             headers: {
-                "Accept": "application/json",
-                "Access-Control-Allow-Origin": "*",
-                "X-Requested-With": "XMLHttpRequest",
-                "Access-Control-Allow-Methods": "GET,POST,PUT,DELETE,OPTIONS",
-                "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"
+                requestHeaders
             }
         })
             .then(response => {
                 this.setState({artists: response.data.results.artistmatches.artist});
+                localStorage.setItem("searchedItem",values.search_field);
             })
             .catch(function (error) {
                 console.log(error);
@@ -130,18 +152,14 @@ class Main extends React.Component {
         if (val) {
             axios.post(`${searchUrl}/2.0/?method=artist.search&artist=${val}&api_key=${apiKey}&format=json`, {}, {
                 headers: {
-                    "Accept": "application/json",
-                    "Access-Control-Allow-Origin": "*",
-                    "X-Requested-With": "XMLHttpRequest",
-                    "Access-Control-Allow-Methods": "GET,POST,PUT,DELETE,OPTIONS",
-                    "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"
+                    requestHeaders
                 }
             })
                 .then(response => {
                     const dataSource = response.data.results.artistmatches.artist.map(item => item.name);
                     this.setState({dataSource: dataSource});
                 })
-                .catch(_ => {
+                .catch(() => {
                     this.setState({dataSource: []});
                     console.log('error')
                 });
