@@ -4,39 +4,42 @@ import Fade from 'react-reveal/Fade';
 import axios from 'axios';
 import { NavLink } from 'react-router-dom'
 
+const searchUrl = "http://ws.audioscrobbler.com";
 
-let searchUrl = "http://ws.audioscrobbler.com";
+
+const apiKey = "372334a4d65c65cc8137d922f890ceeb";
 
 class Main extends React.Component {
 
+
     state = {
         search: "",
-        apiKey: "372334a4d65c65cc8137d922f890ceeb",
         artists: [],
         dataSource: []
     };
 
-
+    getArtists(values){
+        axios.post( `${searchUrl}/2.0/?method=artist.search&artist=${values.search_field}&api_key=${apiKey}&format=json`, {}, {
+            headers: {
+                "Accept": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "X-Requested-With": "XMLHttpRequest",
+                "Access-Control-Allow-Methods": "GET,POST,PUT,DELETE,OPTIONS",
+                "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"
+            }
+        })
+            .then(response => {
+                this.setState({artists: response.data.results.artistmatches.artist});
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
     handleSubmit = e => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                axios.post(searchUrl + `/2.0/?method=artist.search&artist=${values.search_field}&api_key=${this.state.apiKey}&format=json`, {}, {
-                    headers: {
-                        "Accept": "application/json",
-                        "Access-Control-Allow-Origin": "*",
-                        "X-Requested-With": "XMLHttpRequest",
-                        "Access-Control-Allow-Methods": "GET,POST,PUT,DELETE,OPTIONS",
-                        "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"
-                    }
-                })
-                    .then(response => {
-                        this.setState({artists: response.data.results.artistmatches.artist});
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-
+                this.getArtists(values);
             }
         });
     };
@@ -48,7 +51,7 @@ class Main extends React.Component {
 
             <div className={'main-page'}>
                 <div className="banner">
-                    <div className="back"></div>
+                    <div className="back"/>
                     <div className="content">
                         <Fade right>
                             <h1>
@@ -88,7 +91,7 @@ class Main extends React.Component {
                         </div>
                     </div>
                 </div>
-                <div className="musicans" id="musicans">
+                <div className="musicans" id='musicans'>
                     <h2>
                         Исполнители
                     </h2>
@@ -125,7 +128,7 @@ class Main extends React.Component {
     handleAutoComplete(val) {
         {/*Решил сделать автокомплит на поиске, что бы хоть какая то фишка была, а то уныло это всё....*/}
         if (val) {
-            axios.post(searchUrl + `/2.0/?method=artist.search&artist=${val}&api_key=${this.state.apiKey}&format=json`, {}, {
+            axios.post(`${searchUrl}/2.0/?method=artist.search&artist=${val}&api_key=${apiKey}&format=json`, {}, {
                 headers: {
                     "Accept": "application/json",
                     "Access-Control-Allow-Origin": "*",

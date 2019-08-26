@@ -5,32 +5,34 @@ import {NavLink} from "react-router-dom";
 import ReactHtmlParser from 'react-html-parser';
 import { Tabs } from 'antd';
 
-
 const { TabPane } = Tabs;
 
 
-let getArtistUrl = "http://ws.audioscrobbler.com";
+const getArtistUrl = "http://ws.audioscrobbler.com";
+const apiKey = "372334a4d65c65cc8137d922f890ceeb";
 
+const requestHeaders = {
+    "Accept": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "X-Requested-With": "XMLHttpRequest",
+    "Access-Control-Allow-Methods" : "GET,POST,PUT,DELETE,OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"
+};
 class Artist extends React.Component{
     state = {
         artist:window.location.href.split('/').pop(),
         albums:[],
-        apiKey:"372334a4d65c65cc8137d922f890ceeb",
         artistBio:[],
         artistDescription:'',
         artistImage:'',
         artistTags:[]
     };
 
-    componentDidMount() {
+    getArtistInfo(){
         {/*Запрос на получении информации о исполнителе*/}
-        axios.post(getArtistUrl + `/2.0/?method=artist.getinfo&artist=${this.state.artist}&api_key=${this.state.apiKey}&format=json`,{},{
+        axios.post(`${getArtistUrl}/2.0/?method=artist.getinfo&artist=${this.state.artist}&api_key=${apiKey}&format=json`,{},{
             headers:{
-                "Accept": "application/json",
-                "Access-Control-Allow-Origin": "*",
-                "X-Requested-With": "XMLHttpRequest",
-                "Access-Control-Allow-Methods" : "GET,POST,PUT,DELETE,OPTIONS",
-                "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"
+                requestHeaders
             }
         })
             .then(response => {
@@ -56,15 +58,13 @@ class Artist extends React.Component{
             .catch(function (error) {
                 console.log(error);
             });
+    }
+    getArtistAlbums(){
         {/*Я решил сделать чуть-чуть больше чем было указано в задании, поэтому в этом запросе я получаю информацию о исполнителе, для получения его тегов, информации о нём и тд*/}
         {/*Тут я получаю его альбомы, апи конечно странноватое у LastFm но что поделать*/}
-        axios.post(getArtistUrl + `/2.0/?method=artist.getTopAlbums&artist=${this.state.artist}&api_key=${this.state.apiKey}&format=json`,{},{
+        axios.post(`${getArtistUrl}/2.0/?method=artist.getTopAlbums&artist=${this.state.artist}&api_key=${apiKey}&format=json`,{},{
             headers:{
-                "Accept": "application/json",
-                "Access-Control-Allow-Origin": "*",
-                "X-Requested-With": "XMLHttpRequest",
-                "Access-Control-Allow-Methods" : "GET,POST,PUT,DELETE,OPTIONS",
-                "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"
+                requestHeaders
             }
         })
             .then(response => {
@@ -74,23 +74,27 @@ class Artist extends React.Component{
                 console.log(error);
             });
     }
+    componentDidMount() {
+        this.getArtistInfo();
+        this.getArtistAlbums();
+    }
 
     render() {
         return(
             <div>
-                <div className={'GoBack'}><NavLink to={"/"}><Icon type="left" className={'GoBack-icon'}/></NavLink></div>
-                <Tabs defaultActiveKey="1" className={'NavTabs'}>
+                <div className={'go-back'}><NavLink to={"/"}><Icon type="left" className={'go-back-icon'}/></NavLink></div>
+                <Tabs defaultActiveKey="1" className={'nav-tabs'}>
                     <TabPane tab="Альбомы" key="1">
-                        <div className={'AlbumsHolder'}>
-                            <div className={"Albums-tag"}>
+                        <div className={'albums-holder'}>
+                            <div className={"albums-tag"}>
                                 <h1>Альбомы</h1>
                             </div>
-                            <div className={"Albums-tag"}>
-                                <div className={'Albums-tag-holder'}>
+                            <div className={"albums-tag"}>
+                                <div className={'albums-tag-holder'}>
                                     <div>Теги исполнителя:</div>
                                     {
                                         this.state.artistTags.map((tag, key) => {
-                                            return <div className={'Tags'} key={key}>{tag.name}</div>
+                                            return <div className={'tags'} key={key}>{tag.name}</div>
                                         })
                                     }
                                 </div>
@@ -121,13 +125,13 @@ class Artist extends React.Component{
                         </div>
                     </TabPane>
                     <TabPane tab="Информация" key="2">
-                        <div className={'Artist-tag'}><h1>Исполнитель {this.state.artistBio.name}</h1></div>
+                        <div className={'artist-tag'}><h1>Исполнитель {this.state.artistBio.name}</h1></div>
                         <Row gutter={8}>
                             {/*Привет тому кто смотрит этот код, -> на строчку ниже должна выводиться фотография исполнителя, но мне их апи всегда возвращает звёздочку, поэтому не мой косяк, вот как то так да*/}
                             <img src={this.state.artistImage} alt=""/>
                             <Col span={12}>
-                                <div className={'BioHolder-content'}>
-                                    <p className={'BioHolder-description'}>{ReactHtmlParser(this.state.artistDescription)}</p>
+                                <div className={'bio-holder-content'}>
+                                    <p className={'bio-holder-description'}>{ReactHtmlParser(this.state.artistDescription)}</p>
                                 </div>
                             </Col>
                         </Row>
