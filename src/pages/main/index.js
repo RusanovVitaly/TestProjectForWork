@@ -49,8 +49,7 @@ class Main extends React.Component {
                 console.log(error);
             });
     }
-    handleSubmit = e => {
-        e.preventDefault();
+    handleSubmit = () => {
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 this.getArtists(values);
