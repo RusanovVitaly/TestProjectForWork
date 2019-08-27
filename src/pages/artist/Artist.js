@@ -75,19 +75,19 @@ class Artist extends React.Component{
     render() {
         return(
             <div>
-                <div className={'go-back'}><NavLink to={"/"}><Icon type="left" className={'go-back-icon'}/></NavLink></div>
-                <Tabs defaultActiveKey="1" className={'nav-tabs'}>
+                <div className='go-back'><NavLink to="/"><Icon type="left" className='go-back-icon'/></NavLink></div>
+                <Tabs defaultActiveKey="1" className='nav-tabs'>
                     <TabPane tab="Альбомы" key="1">
-                        <div className={'albums-holder'}>
-                            <div className={"albums-tag"}>
+                        <div className='albums-holder'>
+                            <div className="albums-tag">
                                 <h1>Альбомы</h1>
                             </div>
-                            <div className={"albums-tag"}>
-                                <div className={'albums-tag-holder'}>
+                            <div className="albums-tag">
+                                <div className='albums-tag-holder'>
                                     <div>Теги исполнителя:</div>
                                     {
                                         this.state.artistTags.map((tag, key) => {
-                                            return <div className={'tags'} key={key}>{tag.name}</div>
+                                            return <div className='tags' key={key}>{tag.name}</div>
                                         })
                                     }
                                 </div>
@@ -117,13 +117,13 @@ class Artist extends React.Component{
                         </div>
                     </TabPane>
                     <TabPane tab="Информация" key="2">
-                        <div className={'artist-tag'}><h1>Исполнитель {this.state.artistBio.name}</h1></div>
+                        <div className='artist-tag'><h1>Исполнитель {this.state.artistBio.name}</h1></div>
                         <Row gutter={8}>
                             {/*Привет тому кто смотрит этот код, -> на строчку ниже должна выводиться фотография исполнителя, но мне их апи всегда возвращает звёздочку, поэтому не мой косяк, вот как то так да*/}
                             <img src={this.state.artistImage} alt=""/>
                             <Col span={12}>
-                                <div className={'bio-holder-content'}>
-                                    <p className={'bio-holder-description'}>{ReactHtmlParser(this.state.artistDescription)}</p>
+                                <div className='bio-holder-content'>
+                                    <p className='bio-holder-description'>{ReactHtmlParser(this.state.artistDescription)}</p>
                                 </div>
                             </Col>
                         </Row>

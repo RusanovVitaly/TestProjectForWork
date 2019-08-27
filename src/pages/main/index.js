@@ -16,10 +16,10 @@ class Main extends React.Component {
         artists: [],
         dataSource: []
     };
+
     componentDidMount() {
         this.loadLastSearch();
     }
-
     loadLastSearch(){
         if(localStorage.searchedItem !== undefined){
             axios.post( `${searchUrl}/2.0/?method=artist.search&artist=${localStorage.searchedItem}&api_key=${apiKey}&format=json`, {}, {
