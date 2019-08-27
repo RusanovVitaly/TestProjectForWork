@@ -23,9 +23,8 @@ class Main extends React.Component {
     loadLastSearch(){
         if(localStorage.searchedItem !== undefined){
             axios.post( `${searchUrl}/2.0/?method=artist.search&artist=${localStorage.searchedItem}&api_key=${apiKey}&format=json`, {}, {
-                headers: {
-                    requestHeaders
-                }
+                headers: requestHeaders
+
             })
                 .then(response => {
                     this.setState({artists: response.data.results.artistmatches.artist});
@@ -37,9 +36,8 @@ class Main extends React.Component {
     }
     getArtists(values){
         axios.post( `${searchUrl}/2.0/?method=artist.search&artist=${values.search_field}&api_key=${apiKey}&format=json`, {}, {
-            headers: {
-                requestHeaders
-            }
+            headers: requestHeaders
+
         })
             .then(response => {
                 this.setState({artists: response.data.results.artistmatches.artist});

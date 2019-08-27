@@ -24,28 +24,19 @@ class Artist extends React.Component{
     getArtistInfo(){
         {/*Запрос на получении информации о исполнителе*/}
         axios.post(`${getArtistUrl}/2.0/?method=artist.getinfo&artist=${this.state.artist}&api_key=${apiKey}&format=json`,{},{
-            headers:{
-                requestHeaders
-            }
+            headers: requestHeaders
+
         })
             .then(response => {
-                if(response.data.artist !== undefined){
-                    this.setState({artistBio:response.data.artist});
-                }
+                if(response.data.artist !== undefined) this.setState({artistBio:response.data.artist});
                 else  this.setState({artistBio:""});
 
-                if(this.state.artistBio.bio.content !== undefined || this.state.artistBio.bio.content !==""){
-                    this.setState({artistDescription:this.state.artistBio.bio.content});
-                }
+                if(this.state.artistBio.bio.content !== undefined || this.state.artistBio.bio.content !=="") this.setState({artistDescription:this.state.artistBio.bio.content});
                 else this.setState({artistDescription:"К сожалению, у данного исполнителя нет описания!"});
 
-                if(this.state.artistBio.image[3]['#text'] !== undefined){
-                    this.setState({artistImage:this.state.artistBio.image[3]['#text']});
-                }
+                if(this.state.artistBio.image[3]['#text'] !== undefined) this.setState({artistImage:this.state.artistBio.image[3]['#text']});
 
-                if(response.data.artist.tags.tag !== undefined){
-                    this.setState({artistTags:response.data.artist.tags.tag});
-                }
+                if(response.data.artist.tags.tag !== undefined) this.setState({artistTags:response.data.artist.tags.tag});
                 else this.setState({artistTags:""});
             })
             .catch(function (error) {
@@ -56,9 +47,8 @@ class Artist extends React.Component{
         {/*Я решил сделать чуть-чуть больше чем было указано в задании, поэтому в этом запросе я получаю информацию о исполнителе, для получения его тегов, информации о нём и тд*/}
         {/*Тут я получаю его альбомы, апи конечно странноватое у LastFm но что поделать*/}
         axios.post(`${getArtistUrl}/2.0/?method=artist.getTopAlbums&artist=${this.state.artist}&api_key=${apiKey}&format=json`,{},{
-            headers:{
-                requestHeaders
-            }
+            headers: requestHeaders
+
         })
             .then(response => {
                 this.setState({albums:response.data.topalbums.album});
@@ -100,9 +90,7 @@ class Artist extends React.Component{
                                                 <div className="album-content">
                                                     <div className="album-photo">
                                                         <div className="album-photo-wrapper">
-                                                            <img
-                                                                src={res.image[2]['#text'] === "" ? 'https://lastfm-img2.akamaized.net/i/u/174s/2a96cbd8b46e442fc41c2b86b821562f.png' : res.image[2]['#text']}
-                                                                alt="album photo"/>
+                                                            <img src={res.image[2]['#text'] === "" ? 'https://lastfm-img2.akamaized.net/i/u/174s/2a96cbd8b46e442fc41c2b86b821562f.png' : res.image[2]['#text']} alt="album photo"/>
                                                         </div>
                                                     </div>
                                                     <h3>{res.name}</h3>
